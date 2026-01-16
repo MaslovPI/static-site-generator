@@ -20,7 +20,8 @@ class TestHTMLNode(unittest.TestCase):
             }
         )
         self.assertEqual(
-            ' href="https://www.google.com" target="_blank"', node.props_to_html()
+            ' href="https://www.google.com" target="_blank"',
+            node.props_to_html(),
         )
 
 
