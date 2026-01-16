@@ -37,3 +37,7 @@ class TestParentNode(unittest.TestCase):
         node = ParentNode("div", [])
         with self.assertRaises(ValueError):
             node.to_html()
+
+
+if __name__ == "__main__":
+    unittest.main()
