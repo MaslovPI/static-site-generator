@@ -1,7 +1,12 @@
 import unittest
 
 from blocktype import BlockType
-from mdoperations import block_to_block_type, markdown_to_blocks, markdown_to_html_node
+from mdoperations import (
+    block_to_block_type,
+    markdown_to_blocks,
+    markdown_to_html_node,
+    extract_title,
+)
 
 
 class TestMDOperations(unittest.TestCase):
@@ -174,6 +179,26 @@ the **same** even with inline stuff
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff</code></pre></div>",
             html,
         )
+
+    def test_should_extract_title(self):
+        md = """
+this is not a title
+
+## this is also not a title
+
+# this is a title
+
+# this is somewhat a title, but really not
+        """
+        title = extract_title(md)
+        self.assertEqual("this is a title", title)
+
+    def test_should_fail_when_cant_extract_title(self):
+        md = """
+this doc does not have a title
+        """
+        with self.assertRaises(ValueError):
+            extract_title(md)
 
 
 if __name__ == "__main__":

@@ -5,6 +5,14 @@ from conversion import text_node_to_html_node
 from nodeoperations import text_to_textnodes
 
 
+def extract_title(markdown):
+    for line in markdown.split("\n"):
+        striped = line.strip()
+        if striped.startswith("# "):
+            return striped.strip("#").strip()
+    raise ValueError("Markdown misses title")
+
+
 def markdown_to_html_node(markdown) -> ParentNode:
     children = []
     blocks = markdown_to_blocks(markdown)
