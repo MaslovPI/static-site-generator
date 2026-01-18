@@ -29,7 +29,7 @@ def copy_all_directory(from_path, to_path):
             print(f"Directory {entry} copied successfuly")
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     os.makedirs(dest_dir_path, exist_ok=True)
     content = os.listdir(dir_path_content)
     for entry in content:
@@ -37,12 +37,12 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         full_path_to = os.path.join(dest_dir_path, entry)
         if os.path.isfile(full_path):
             full_path_to_html = os.path.splitext(full_path_to)[0] + ".html"
-            generate_page(full_path, template_path, full_path_to_html)
+            generate_page(full_path, template_path, full_path_to_html, basepath)
         else:
-            generate_pages_recursive(full_path, template_path, full_path_to)
+            generate_pages_recursive(full_path, template_path, full_path_to, basepath)
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     markdown = get_file_content(from_path)
     template = get_file_content(template_path)
@@ -51,6 +51,8 @@ def generate_page(from_path, template_path, dest_path):
     title = extract_title(markdown)
     content = template.replace("{{ Title }}", title)
     content = content.replace("{{ Content }}", html)
+    content = content.replace('href="/', f'href="{basepath}')
+    content = content.replace('src="/', f'src="{basepath}')
     update_file_content(dest_path, content)
 
 
