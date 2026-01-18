@@ -1,5 +1,7 @@
-import shutil
 import os
+import shutil
+
+from mdoperations import extract_title, markdown_to_html_node
 
 
 def copy_all_directory(from_path, to_path):
@@ -25,3 +27,28 @@ def copy_all_directory(from_path, to_path):
             os.mkdir(full_path_to)
             copy_all_directory(full_path, full_path_to)
             print(f"Directory {entry} copied successfuly")
+
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    markdown = get_file_content(from_path)
+    template = get_file_content(template_path)
+    html_node = markdown_to_html_node(markdown)
+    html = html_node.to_html()
+    title = extract_title(markdown)
+    content = template.replace("{{ Title }}", title)
+    content = content.replace("{{ Content }}", html)
+    update_file_content(dest_path, content)
+
+
+def get_file_content(path):
+    with open(path) as f:
+        return f.read()
+
+
+def update_file_content(path, content):
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    with open(path, "w") as f:
+        f.write(content)

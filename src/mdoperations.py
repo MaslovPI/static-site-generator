@@ -54,7 +54,7 @@ def lines_to_list_items(lines, delimiter):
 def lines_to_quote(lines):
     return ParentNode(
         "blockquote",
-        text_to_children(" ".join(map(lambda line: line.split("> ")[1], lines))),
+        text_to_children(" ".join(map(lambda line: line.split(">")[1].strip(), lines))),
     )
 
 
@@ -109,7 +109,7 @@ def is_code(lines):
 
 
 def is_quote(lines):
-    return all(line.startswith("> ") for line in lines)
+    return all(line.startswith("> ") or line.strip() == ">" for line in lines)
 
 
 def is_ulist(lines):

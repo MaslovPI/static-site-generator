@@ -68,6 +68,8 @@ This is the same paragraph on a new line
         self.assertEqual(block_to_block_type(block), BlockType.CODE)
         block = "> quote\n> more quote"
         self.assertEqual(block_to_block_type(block), BlockType.QUOTE)
+        block = "> quote\n>\n> more quote"
+        self.assertEqual(block_to_block_type(block), BlockType.QUOTE)
         block = "- list\n- items"
         self.assertEqual(block_to_block_type(block), BlockType.ULIST)
         block = "1. list\n2. items"
@@ -151,8 +153,9 @@ this is paragraph text
 
     def test_blockquote(self):
         md = """
-> This is a
-> blockquote block
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
 
 this is paragraph text
 
@@ -161,7 +164,7 @@ this is paragraph text
         node = markdown_to_html_node(md)
         html = node.to_html()
         self.assertEqual(
-            "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
+            '<div><blockquote>"I am in fact a Hobbit in all but size."  -- J.R.R. Tolkien</blockquote><p>this is paragraph text</p></div>',
             html,
         )
 
