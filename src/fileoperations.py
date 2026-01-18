@@ -29,6 +29,19 @@ def copy_all_directory(from_path, to_path):
             print(f"Directory {entry} copied successfuly")
 
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    os.makedirs(dest_dir_path, exist_ok=True)
+    content = os.listdir(dir_path_content)
+    for entry in content:
+        full_path = os.path.join(dir_path_content, entry)
+        full_path_to = os.path.join(dest_dir_path, entry)
+        if os.path.isfile(full_path):
+            full_path_to_html = os.path.splitext(full_path_to)[0] + ".html"
+            generate_page(full_path, template_path, full_path_to_html)
+        else:
+            generate_pages_recursive(full_path, template_path, full_path_to)
+
+
 def generate_page(from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     markdown = get_file_content(from_path)
